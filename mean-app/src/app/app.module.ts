@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppMAterialModule } from './app-material.module';
 
@@ -13,7 +14,13 @@ import { PostService } from './posts/posts.service';
 
 @NgModule({
   declarations: [AppComponent, PostsComponent, CreatePostComponent, PostsListComponent],
-  imports: [BrowserModule, FormsModule, BrowserAnimationsModule, AppMAterialModule],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    AppMAterialModule,
+    HttpClientModule
+  ],
   providers: [PostService],
   bootstrap: [AppComponent]
 })

@@ -1,7 +1,9 @@
-import { Injectable } from '../../../node_modules/@angular/core';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 
 import { Post } from './post.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +12,15 @@ export class PostService {
   private posts: Post[] = [];
   private postsUpdated$: BehaviorSubject<Post[]> = new BehaviorSubject<Post[]>([]);
 
+  constructor(private http: HttpClient) {}
+
   getPosts() {
-    return [...this.posts];
+    this.http
+      .get<{ msg: string; data: Post[] }>('http://localhost:3000/api/posts')
+      .subscribe(res => {
+        this.posts = res.data;
+        this.postsUpdated$.next([...this.posts]);
+      });
   }
 
   getPostsAsObs() {
@@ -19,7 +28,12 @@ export class PostService {
   }
 
   addPost(post: Post) {
-    this.posts.push(post);
-    this.postsUpdated$.next([...this.posts]);
+    this.http
+      .post<{ msg: string }>('http://localhost:3000/api/posts', post)
+      .subscribe(res => {
+        console.log(res.msg);
+        this.posts.push(post);
+        this.postsUpdated$.next([...this.posts]);
+      });
   }
 }
