@@ -1,0 +1,36 @@
+// ============ BOOTSTRAP REBOOT
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+// ============ BOOTSTRAP
+@import '../node_modules/bootstrap/scss/functions';
+@import '../node_modules/bootstrap/scss/variables';
+@import '../node_modules/bootstrap/scss/mixins';
+@import '../node_modules/bootstrap/scss/grid';
+@import '../node_modules/bootstrap/scss/utilities';
+
+// ============ GLOBAL (ALL ELEMENTS)
+*:focus {
+  outline: 0;
+}
+
+// ============ GLOBAL STYLES
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+.cp {
+  cursor: pointer;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

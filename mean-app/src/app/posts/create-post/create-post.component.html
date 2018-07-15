@@ -1,0 +1,29 @@
+<mat-card>
+  <form (submit)="onCreatepost(addPost)"
+    #addPost="ngForm">
+    <mat-form-field>
+      <input matInput
+        type="text"
+        placeholder="Title"
+        ngModel
+        #title="ngModel"
+        name="title"
+        required
+        minlength="2">
+      <mat-error *ngIf="title.invalid">Minimum length of title is 2.</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <textarea matInput
+        rows="4"
+        placeholder="Details"
+        ngModel
+        #details="ngModel"
+        name="details"
+        required
+        minlength="4"></textarea>
+    </mat-form-field>
+    <br>
+    <button mat-raised-button
+      color="accent">Add post</button>
+  </form>
+</mat-card>
