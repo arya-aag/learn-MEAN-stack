@@ -21,6 +21,7 @@
         name="details"
         required
         minlength="4"></textarea>
+      <mat-error *ngIf="details.invalid">Minimum length of title is 4.</mat-error>
     </mat-form-field>
     <br>
     <button mat-raised-button
