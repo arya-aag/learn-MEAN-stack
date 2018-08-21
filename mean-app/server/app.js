@@ -29,18 +29,37 @@ app.post('/api/posts', (req, res, next) => {
     title: req.body.title,
     content: req.body.content
   });
-  post.save();
-  res.status(201).json({ msg: 'success' });
+  post.save().then(
+    result => {
+      console.log('created post with id: ' + result._id);
+      res.status(201).json({ message: 'created', payload: result['_id'] });
+    },
+    error => {
+      res.status(500).json({ message: 'failed', payload: error });
+    }
+  );
 });
 
-app.use('/api/posts', (req, res, next) => {
+app.get('/api/posts', (req, res, next) => {
   Post.find().then(posts => {
-    console.log(posts);
     res.status(200).json({
       msg: 'success',
       data: posts
     });
   });
+});
+
+app.delete('/api/posts/:id', (req, res, next) => {
+  console.log('delete post: ' + req.params['id']);
+  Post.deleteOne({ _id: req.params.id }).then(
+    result => {
+      console.log(result);
+      res.status(204).json({ message: 'Post deleted!' });
+    },
+    error => {
+      res.status(500).json({ message: 'Error: ' + error.toString() });
+    }
+  );
 });
 
 module.exports = app;
