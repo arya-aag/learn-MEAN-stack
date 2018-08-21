@@ -1,11 +1,15 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <span>Mean App</span>
+    <span><a routerLink="/">Mean App</a></span>
     <span class="spacer"></span>
-    <mat-icon class="icon">favorite</mat-icon>
-    <mat-icon class="icon">delete</mat-icon>
+    <div class="button-row">
+      <a mat-button
+        routerLink="/create"
+        routerLinkActive="mat-accent">New Post</a>
+    </div>
   </mat-toolbar-row>
 </mat-toolbar>
+
 <div class="container mt-2">
-  <app-posts></app-posts>
+  <router-outlet></router-outlet>
 </div>

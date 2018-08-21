@@ -1,11 +1,11 @@
 <mat-card>
-  <form (submit)="onCreatepost(addPost)"
+  <form (submit)="onSubmitPost(addPost)"
     #addPost="ngForm">
     <mat-form-field>
       <input matInput
         type="text"
         placeholder="Title"
-        ngModel
+        [ngModel]="post.title"
         #title="ngModel"
         name="title"
         required
@@ -16,7 +16,7 @@
       <textarea matInput
         rows="4"
         placeholder="Details"
-        ngModel
+        [ngModel]="post.content"
         #details="ngModel"
         name="details"
         required
@@ -25,6 +25,6 @@
     </mat-form-field>
     <br>
     <button mat-raised-button
-      color="accent">Add post</button>
+      color="accent">{{ postId !== null ? 'Update' : 'Add post' }}</button>
   </form>
 </mat-card>

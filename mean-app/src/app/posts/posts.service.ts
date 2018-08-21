@@ -5,6 +5,11 @@ import { map } from 'rxjs/operators';
 
 import { Post } from './post.model';
 
+export interface ServerResponse {
+  message: string;
+  payload: any;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -35,11 +40,22 @@ export class PostService {
     return this.postsUpdated$.asObservable();
   }
 
+  getPost(id: string) {
+    const post = this.posts.find(p => p.id === id);
+    return { ...post };
+  }
+
   addPost(post: Post) {
-    this.http.post<{ message: string; payload: string }>(`${this.apiUrl}/posts`, post).subscribe(res => {
+    this.http.post<ServerResponse>(`${this.apiUrl}/posts`, post).subscribe(res => {
       console.log(res);
       this.posts.push({ ...post, id: res.payload });
       this.postsUpdated$.next([...this.posts]);
+    });
+  }
+
+  updatePost(post: Post) {
+    this.http.put<ServerResponse>(`${this.apiUrl}/posts/${post.id}`, post).subscribe(data => {
+      console.log(data);
     });
   }
 

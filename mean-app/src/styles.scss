@@ -34,3 +34,8 @@ body {
 .spacer {
   flex: 1 1 auto;
 }
+
+a[routerLink] {
+  color: #ffffff;
+  text-decoration: none;
+}

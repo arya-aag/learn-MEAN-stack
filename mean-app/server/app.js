@@ -18,7 +18,7 @@ mongoose.connect('mongodb://max_mean:max123mean@127.0.0.1:27017/max-mean').then(
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content-Type,Accept');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
   next();
 });
 
@@ -36,6 +36,30 @@ app.post('/api/posts', (req, res, next) => {
     },
     error => {
       res.status(500).json({ message: 'failed', payload: error });
+    }
+  );
+});
+
+app.put('/api/posts/:id', (req, res, next) => {
+  const updatedPost = new Post({
+    _id: req.body.id,
+    title: req.body.title,
+    content: req.body.content
+  });
+  Post.updateOne({ _id: req.params.id }, updatedPost).then(
+    result => {
+      console.log(result);
+      res.status(200).json({
+        message: 'updated',
+        payload: result
+      });
+    },
+    error => {
+      console.log(error);
+      res.status(500).json({
+        message: 'failed',
+        payload: error
+      });
     }
   );
 });

@@ -11,22 +11,8 @@ import {
 
 @NgModule({
   declarations: [],
-  imports: [
-    MatToolbarModule,
-    MatInputModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatExpansionModule
-  ],
+  imports: [MatToolbarModule, MatInputModule, MatCardModule, MatButtonModule, MatIconModule, MatExpansionModule],
   providers: [],
-  exports: [
-    MatToolbarModule,
-    MatInputModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatExpansionModule
-  ]
+  exports: [MatToolbarModule, MatInputModule, MatCardModule, MatButtonModule, MatIconModule, MatExpansionModule]
 })
-export class AppMAterialModule {}
+export class AppMaterialModule {}
