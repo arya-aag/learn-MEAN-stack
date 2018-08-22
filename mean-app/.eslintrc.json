@@ -1,0 +1,9 @@
+{
+  "extends": "standard",
+  "parserOptions": {
+    "ecmaVersion": 2015
+  },
+  "rules": {
+    "semi": "off"
+  }
+}

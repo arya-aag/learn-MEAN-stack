@@ -8,31 +8,36 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
   selector: 'app-create-post',
   templateUrl: './create-post.component.html',
   styleUrls: ['./create-post.component.scss']
-})
+  })
 export class CreatePostComponent implements OnInit {
   enteredTitle = '';
   enteredContent = '';
   postId: string = null;
   post: Post;
+  isLoading = false;
 
-  constructor(private postService: PostService, private route: ActivatedRoute) {}
+  constructor (private postService: PostService, private route: ActivatedRoute) {}
 
-  ngOnInit() {
+  ngOnInit () {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
         this.postId = paramMap.get('postId');
-        this.post = this.postService.getPost(this.postId);
+        this.isLoading = true;
+        this.postService.getPost(this.postId).subscribe((fetchedPost: Post) => {
+          this.post = fetchedPost;
+          this.isLoading = false;
+        });
       } else {
         this.postId = null;
       }
     });
   }
 
-  onSubmitPost(form: NgForm) {
+  onSubmitPost (form: NgForm) {
     if (form.invalid) {
       return;
     }
-
+    this.isLoading = true;
     if (this.postId !== null) {
       this.postService.updatePost({
         ...this.post,
