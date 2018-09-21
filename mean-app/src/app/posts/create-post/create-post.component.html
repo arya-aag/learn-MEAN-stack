@@ -2,31 +2,42 @@
 
   <mat-spinner *ngIf="isLoading"></mat-spinner>
 
-  <form *ngIf="!isLoading"
-    (submit)="onSubmitPost(addPost)"
-    #addPost="ngForm">
+  <form [formGroup]="form"
+    *ngIf="!isLoading"
+    (submit)="onSubmitPost()">
+
     <mat-form-field>
       <input matInput
         type="text"
         placeholder="Title"
-        [ngModel]="post?.title"
-        #title="ngModel"
+        formControlName="title"
         name="title"
         required
         minlength="2">
-      <mat-error *ngIf="title.invalid">Minimum length of title is 2.</mat-error>
+      <mat-error *ngIf="form.get('title').invalid">Minimum length of title is 2.</mat-error>
     </mat-form-field>
+
+    <div>
+      <button type="button"
+        (click)="fileUpload.click()"
+        mat-stroked-button>Upload Image</button>
+      <input #fileUpload
+        class="vis-hidden"
+        type="file"
+        name="image">
+    </div>
+
     <mat-form-field>
       <textarea matInput
         rows="4"
-        placeholder="Details"
-        [ngModel]="post?.content"
-        #details="ngModel"
-        name="details"
+        placeholder="Content"
+        formControlName="content"
+        name="content"
         required
         minlength="4"></textarea>
-      <mat-error *ngIf="details.invalid">Minimum length of title is 4.</mat-error>
+      <mat-error *ngIf="form.get('content').invalid">Minimum length of title is 4.</mat-error>
     </mat-form-field>
+
     <br>
     <button mat-raised-button
       color="accent">{{ postId !== null ? 'Update' : 'Add post' }}</button>

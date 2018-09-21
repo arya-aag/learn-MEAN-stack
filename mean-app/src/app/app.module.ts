@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
@@ -15,7 +15,14 @@ import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [AppComponent, PostsComponent, CreatePostComponent, PostsListComponent],
-  imports: [BrowserModule, FormsModule, BrowserAnimationsModule, AppMaterialModule, HttpClientModule, AppRoutingModule],
+  imports: [
+    BrowserModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    AppMaterialModule,
+    HttpClientModule,
+    AppRoutingModule
+  ],
   providers: [PostService],
   bootstrap: [AppComponent]
 })
