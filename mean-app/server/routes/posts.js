@@ -1,5 +1,6 @@
 // library imports
 const express = require('express');
+const multer = require('multer');
 
 // project imports
 const Post = require('../models/post');
@@ -7,15 +8,44 @@ const Post = require('../models/post');
 // code
 const router = express.Router();
 
-router.post('', (req, res, next) => {
+const MIME_TYPE_MAP = {
+  'image/png': 'png',
+  'image/jpeg': 'jpg',
+  'image/jpg': 'jpg'
+};
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const isValid = MIME_TYPE_MAP[file.mimetype];
+    let error = new Error('Invalid Mime Type');
+    if (isValid) {
+      error = null;
+    }
+    cb(error, 'server/images');
+  },
+  filename: (req, file, cb) => {
+    const filename = file.originalname
+      .toLowerCase()
+      .split(' ')
+      .join('-');
+    const ext = MIME_TYPE_MAP[file.mimetype];
+    cb(null, filename + '-' + Date.now() + '.' + ext);
+  }
+});
+
+router.post('', multer({ storage: storage }).single('image'), (req, res, next) => {
+  const url = req.protocol + '://' + req.get('host');
   const post = new Post({
     title: req.body.title,
-    content: req.body.content
+    content: req.body.content,
+    imagePath: url + '/images/' + req.file.filename
   });
   post.save().then(
     result => {
       console.log('created post with id: ' + result._id);
-      res.status(201).json({ message: 'created', payload: result['_id'] });
+      res
+        .status(201)
+        .json({ message: 'created', payload: { ...result, id: result._id } });
     },
     error => {
       res.status(500).json({ message: 'failed', payload: error });

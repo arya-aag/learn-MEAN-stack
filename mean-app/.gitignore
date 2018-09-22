@@ -1,5 +1,9 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# custom
+/server/images/*.png
+/server/images/*.jpg
+
 # compiled output
 /dist
 /tmp
