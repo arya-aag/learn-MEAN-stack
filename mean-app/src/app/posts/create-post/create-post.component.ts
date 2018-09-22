@@ -41,7 +41,11 @@ export class CreatePostComponent implements OnInit {
         this.isLoading = true;
         this.postService.getPost(this.postId).subscribe((fetchedPost: Post) => {
           this.post = fetchedPost;
-          this.form.setValue({ title: this.post.title, content: this.post.content });
+          this.form.setValue({
+            title: this.post.title,
+            content: this.post.content,
+            image: this.post.imagePath
+          });
           this.isLoading = false;
         });
       } else {
@@ -56,11 +60,14 @@ export class CreatePostComponent implements OnInit {
     }
     this.isLoading = true;
     if (this.postId !== null) {
-      this.postService.updatePost({
-        ...this.post,
-        title: this.form.value.title,
-        content: this.form.value.content
-      });
+      this.postService.updatePost(
+        {
+          ...this.post,
+          title: this.form.value.title,
+          content: this.form.value.content
+        },
+        this.form.value.image
+      );
     } else {
       this.postService.addPost(
         {

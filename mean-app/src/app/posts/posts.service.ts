@@ -52,7 +52,7 @@ export class PostService {
     );
   }
 
-  addPost(post: Post, image: File) {
+  addPost(post: Post, image: File | string) {
     const postData = new FormData();
     postData.append('title', post.title);
     postData.append('content', post.content);
@@ -70,9 +70,17 @@ export class PostService {
       });
   }
 
-  updatePost(post: Post) {
+  updatePost(post: Post, image: File) {
+    const postData = new FormData();
+    postData.append('title', post.title);
+    postData.append('content', post.content);
+    if (typeof image === 'object') {
+      postData.append('image', image, post.title);
+    } else {
+      postData.append('imagePath', image);
+    }
     this.http
-      .put<ServerResponse>(`${this.apiUrl}/posts/${post.id}`, post)
+      .put<ServerResponse>(`${this.apiUrl}/posts/${post.id}`, postData)
       .subscribe(data => {
         const index = this.posts.findIndex(el => el.id === post.id);
         const updatedPosts = [...this.posts];
