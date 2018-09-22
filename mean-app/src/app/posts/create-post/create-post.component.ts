@@ -62,10 +62,14 @@ export class CreatePostComponent implements OnInit {
         content: this.form.value.content
       });
     } else {
-      this.postService.addPost({
-        title: this.form.value.title,
-        content: this.form.value.content
-      });
+      this.postService.addPost(
+        {
+          title: this.form.value.title,
+          content: this.form.value.content,
+          imagePath: null
+        },
+        this.form.get('image').value
+      );
     }
 
     this.form.reset();
@@ -77,7 +81,7 @@ export class CreatePostComponent implements OnInit {
     this.form.get('image').updateValueAndValidity();
     const reader = new FileReader();
     reader.onload = () => {
-      this.imagePreview = reader.result;
+      this.imagePreview = reader.result.toString();
     };
     reader.readAsDataURL(file);
     console.log(this.form.get('image'));

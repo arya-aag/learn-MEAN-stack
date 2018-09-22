@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Post } from './post.model';
@@ -13,21 +13,21 @@ export interface ServerResponse {
 
 @Injectable({
   providedIn: 'root'
-  })
+})
 export class PostService {
   private posts: Post[] = [];
-  private postsUpdated$: BehaviorSubject<Post[]> = new BehaviorSubject<Post[]>([]);
+  private postsUpdated$: Subject<Post[]> = new Subject<Post[]>();
   private apiUrl = 'http://localhost:3000/api';
 
-  constructor (private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
-  getPosts () {
+  getPosts() {
     this.http
       .get<ServerResponse>(`${this.apiUrl}/posts`)
       .pipe(
         map(postData => {
           return postData.payload.map(el => {
-            return { title: el.title, content: el.content, id: el._id };
+            return { ...el, id: el._id };
           });
         })
       )
@@ -37,46 +37,57 @@ export class PostService {
       });
   }
 
-  getPostsAsObs () {
+  getPostsAsObs() {
     return this.postsUpdated$.asObservable();
   }
 
-  getPost (id: string) {
+  getPost(id: string) {
     return this.http.get<ServerResponse>(`${this.apiUrl}/posts/${id}`).pipe(
       map(res => {
         return {
-          id: res.payload._id,
-          title: res.payload.title,
-          content: res.payload.content
+          ...res.payload,
+          id: res.payload._id
         };
       })
     );
   }
 
-  addPost (post: Post) {
-    this.http.post<ServerResponse>(`${this.apiUrl}/posts`, post).subscribe(res => {
-      console.log(res);
-      this.posts.push({ ...post, id: res.payload });
-      this.postsUpdated$.next([...this.posts]);
-      this.router.navigate(['/']);
-    });
+  addPost(post: Post, image: File) {
+    const postData = new FormData();
+    postData.append('title', post.title);
+    postData.append('content', post.content);
+    postData.append('image', image, post.title);
+    this.http
+      .post<{
+        message: string;
+        payload: Post;
+      }>(`${this.apiUrl}/posts`, postData)
+      .subscribe(res => {
+        console.log(res);
+        this.posts.push({ ...post, ...res.payload });
+        this.postsUpdated$.next([...this.posts]);
+        this.router.navigate(['/']);
+      });
   }
 
-  updatePost (post: Post) {
-    this.http.put<ServerResponse>(`${this.apiUrl}/posts/${post.id}`, post).subscribe(data => {
-      const index = this.posts.findIndex(el => el.id === post.id);
-      const updatedPosts = [...this.posts];
-      updatedPosts[index] = { ...post };
-      this.posts = [...updatedPosts];
-      this.postsUpdated$.next([...this.posts]);
-      this.router.navigate(['/']);
-    });
+  updatePost(post: Post) {
+    this.http
+      .put<ServerResponse>(`${this.apiUrl}/posts/${post.id}`, post)
+      .subscribe(data => {
+        const index = this.posts.findIndex(el => el.id === post.id);
+        const updatedPosts = [...this.posts];
+        updatedPosts[index] = { ...post };
+        this.posts = [...updatedPosts];
+        this.postsUpdated$.next([...this.posts]);
+        this.router.navigate(['/']);
+      });
   }
 
-  deletePost (id: string) {
+  deletePost(id: string) {
     this.http.delete<any>(`${this.apiUrl}/posts/${id}`).subscribe(() => {
       const updatedPosts = this.posts.filter(post => post.id !== id);
-      this.postsUpdated$.next([...updatedPosts]);
+      this.posts = [...updatedPosts];
+      this.postsUpdated$.next([...this.posts]);
     });
   }
 }
