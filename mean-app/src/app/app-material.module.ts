@@ -7,29 +7,32 @@ import {
   MatButtonModule,
   MatIconModule,
   MatExpansionModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  MatPaginatorModule
 } from '@angular/material';
 
 @NgModule({
   declarations: [],
   imports: [
-  MatToolbarModule,
-  MatInputModule,
-  MatCardModule,
-  MatButtonModule,
-  MatIconModule,
-  MatExpansionModule,
-  MatProgressSpinnerModule
+    MatToolbarModule,
+    MatInputModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatExpansionModule,
+    MatProgressSpinnerModule,
+    MatPaginatorModule
   ],
   providers: [],
   exports: [
-  MatToolbarModule,
-  MatInputModule,
-  MatCardModule,
-  MatButtonModule,
-  MatIconModule,
-  MatExpansionModule,
-  MatProgressSpinnerModule
+    MatToolbarModule,
+    MatInputModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatExpansionModule,
+    MatProgressSpinnerModule,
+    MatPaginatorModule
   ]
-  })
+})
 export class AppMaterialModule {}

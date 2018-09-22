@@ -43,9 +43,7 @@ router.post('', multer({ storage: storage }).single('image'), (req, res, next) =
   post.save().then(
     result => {
       console.log('created post with id: ' + result._id);
-      res
-        .status(201)
-        .json({ message: 'created', payload: { ...result, id: result._id } });
+      res.status(201).json({ message: 'created', payload: result });
     },
     error => {
       res.status(500).json({ message: 'failed', payload: error });
@@ -108,12 +106,24 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.get('', (req, res, next) => {
-  Post.find().then(posts => {
-    res.status(200).json({
-      message: 'success',
-      payload: posts
+  const postQuery = Post.find();
+  const pageSize = +req.query.size;
+  const pageIndex = +req.query.index;
+  if (pageSize && pageIndex >= 0) {
+    postQuery.skip(pageSize * pageIndex).limit(pageSize);
+  }
+  let postsArr = [];
+  postQuery
+    .then(posts => {
+      postsArr = posts;
+      return Post.countDocuments();
+    })
+    .then(count => {
+      res.status(200).json({
+        message: 'success',
+        payload: { count, posts: postsArr }
+      });
     });
-  });
 });
 
 router.delete('/:id', (req, res, next) => {
@@ -121,10 +131,16 @@ router.delete('/:id', (req, res, next) => {
   Post.deleteOne({ _id: req.params.id }).then(
     result => {
       console.log(result);
-      res.status(204).json({ message: 'Post deleted!' });
+      res.status(204).json({
+        message: 'Post deleted!',
+        payload: req.params['id']
+      });
     },
     error => {
-      res.status(500).json({ message: 'Error: ' + error.toString() });
+      res.status(500).json({
+        message: 'failure',
+        payload: error
+      });
     }
   );
 });

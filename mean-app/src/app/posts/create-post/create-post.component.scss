@@ -8,6 +8,10 @@ mat-card {
   }
 }
 
-.image-preview img {
-  height: 8rem;
+.image-preview {
+  overflow: hidden;
+  img {
+    max-height: 8rem;
+    max-width: 100%;
+  }
 }

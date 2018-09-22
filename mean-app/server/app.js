@@ -17,10 +17,21 @@ mongoose
   )
   .then(
     response => {
-      console.info('Connected to MongoDB!');
+      const date = new Date();
+      console.info(
+        `[${date.toLocaleDateString('en-US')} ${date.toLocaleTimeString(
+          'en-US'
+        )}] Connected to MongoDB!`
+      );
     },
     error => {
-      console.log('MongoDB connection failure!', error);
+      const date = new Date();
+      console.log(
+        `[${date.toLocaleDateString('en-US')} ${date.toLocaleTimeString(
+          'en-US'
+        )}] MongoDB connection failure!`,
+        error
+      );
     }
   );
 

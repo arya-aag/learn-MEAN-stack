@@ -2,6 +2,10 @@ mat-spinner {
   margin: auto;
 }
 
-.img-wrapper img {
-  height: 10rem;
+.img-wrapper {
+  overflow: hidden;
+  img {
+    max-height: 10rem;
+    max-width: 100%;
+  }
 }
