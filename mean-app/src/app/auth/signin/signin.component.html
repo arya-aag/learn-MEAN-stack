@@ -1,0 +1,48 @@
+<mat-card>
+
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+
+  <form #signinForm="ngForm"
+    *ngIf="!isLoading"
+    (submit)="onSubmit(signinForm)">
+
+    <mat-form-field>
+      <input matInput
+        type="email"
+        placeholder="Email"
+        name="email"
+        #email="ngModel"
+        ngModel
+        required
+        email>
+      <mat-error *ngIf="email.touched && email.invalid">
+        Please enter a valid email id.</mat-error>
+    </mat-form-field>
+
+    <br>
+
+    <mat-form-field>
+      <input matInput
+        [type]="showPassword ? 'text' : 'password'"
+        placeholder="Password"
+        name="password"
+        #password="ngModel"
+        minlength="8"
+        ngModel
+        required>
+      <button mat-button
+        matSuffix
+        mat-icon-button
+        aria-label="Show"
+        (click)="showPassword = !showPassword">
+        <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error *ngIf="password.touched && password.invalid">
+        Should be at least 8 characters long.</mat-error>
+    </mat-form-field>
+
+    <br>
+    <button mat-raised-button
+      color="accent">Login</button>
+  </form>
+</mat-card>
