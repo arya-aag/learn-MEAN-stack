@@ -5,8 +5,3 @@ export interface Post {
   content: string;
   imagePath: string;
 }
-
-export interface ServerResponse<T> {
-  message: string;
-  payload: T;
-}

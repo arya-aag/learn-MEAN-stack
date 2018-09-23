@@ -6,6 +6,7 @@ const path = require('path');
 
 // project imports
 const postsRoutes = require('./routes/posts');
+const userRoutes = require('./routes/users');
 
 // code
 const app = express();
@@ -53,6 +54,8 @@ app.use(bodyparser.urlencoded({ extended: false }));
 
 app.use('/images', express.static(path.join('server/images')));
 
+// routing logic
 app.use('/api/posts', postsRoutes);
+app.use('/api/users', userRoutes);
 
 module.exports = app;

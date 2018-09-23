@@ -8,6 +8,7 @@ const Post = require('../models/post');
 // code
 const router = express.Router();
 
+// middleware
 const MIME_TYPE_MAP = {
   'image/png': 'png',
   'image/jpeg': 'jpg',
@@ -33,54 +34,9 @@ const storage = multer.diskStorage({
   }
 });
 
-router.post('', multer({ storage: storage }).single('image'), (req, res, next) => {
-  const url = req.protocol + '://' + req.get('host');
-  const post = new Post({
-    title: req.body.title,
-    content: req.body.content,
-    imagePath: url + '/images/' + req.file.filename
-  });
-  post.save().then(
-    result => {
-      console.log('created post with id: ' + result._id);
-      res.status(201).json({ message: 'created', payload: result });
-    },
-    error => {
-      res.status(500).json({ message: 'failed', payload: error });
-    }
-  );
-});
+// routes
 
-router.put('/:id', multer({ storage: storage }).single('image'), (req, res, next) => {
-  let imagePath = req.body.imagePath;
-  if (req.file) {
-    const url = req.protocol + '://' + req.get('host');
-    imagePath = url + '/images/' + req.file.filename;
-  }
-  const updatedPost = new Post({
-    _id: req.params.id,
-    title: req.body.title,
-    content: req.body.content,
-    imagePath
-  });
-  Post.updateOne({ _id: req.params.id }, updatedPost).then(
-    result => {
-      console.log(result);
-      res.status(200).json({
-        message: 'updated',
-        payload: result
-      });
-    },
-    error => {
-      console.log(error);
-      res.status(500).json({
-        message: 'failed',
-        payload: error
-      });
-    }
-  );
-});
-
+// get
 router.get('/:id', (req, res, next) => {
   Post.findById({ _id: req.params.id }).then(
     post => {
@@ -126,6 +82,57 @@ router.get('', (req, res, next) => {
     });
 });
 
+// post
+router.post('', multer({ storage: storage }).single('image'), (req, res, next) => {
+  const url = req.protocol + '://' + req.get('host');
+  const post = new Post({
+    title: req.body.title,
+    content: req.body.content,
+    imagePath: url + '/images/' + req.file.filename
+  });
+  post.save().then(
+    result => {
+      console.log('created post with id: ' + result._id);
+      res.status(201).json({ message: 'created', payload: result });
+    },
+    error => {
+      res.status(500).json({ message: 'failed', payload: error });
+    }
+  );
+});
+
+// put
+router.put('/:id', multer({ storage: storage }).single('image'), (req, res, next) => {
+  let imagePath = req.body.imagePath;
+  if (req.file) {
+    const url = req.protocol + '://' + req.get('host');
+    imagePath = url + '/images/' + req.file.filename;
+  }
+  const updatedPost = new Post({
+    _id: req.params.id,
+    title: req.body.title,
+    content: req.body.content,
+    imagePath
+  });
+  Post.updateOne({ _id: req.params.id }, updatedPost).then(
+    result => {
+      console.log(result);
+      res.status(200).json({
+        message: 'updated',
+        payload: result
+      });
+    },
+    error => {
+      console.log(error);
+      res.status(500).json({
+        message: 'failed',
+        payload: error
+      });
+    }
+  );
+});
+
+// delete
 router.delete('/:id', (req, res, next) => {
   console.log('delete post: ' + req.params['id']);
   Post.deleteOne({ _id: req.params.id }).then(
