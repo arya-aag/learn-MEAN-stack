@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 
 // project imports
 const User = require('../models/user');
+const SECRET_KEY = require('../middleware/check-auth').secret;
 
 // code
 const router = express.Router();
@@ -63,7 +64,7 @@ router.post('/login', (req, res, next) => {
           email: fetchedUser.email,
           userId: fetchedUser._id
         },
-        'this is a long passphrase thats hard to guess',
+        SECRET_KEY,
         { expiresIn: '1h' }
       );
       res.status(200).json({
