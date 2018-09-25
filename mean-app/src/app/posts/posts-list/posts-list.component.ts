@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from '../../../../node_modules/rxjs';
+import { Subscription, Observable } from '../../../../node_modules/rxjs';
 import { PageEvent } from '@angular/material';
 
 import { PostService } from '../posts.service';
 import { Post } from '../post.model';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-posts-list',
@@ -18,8 +19,9 @@ export class PostsListComponent implements OnInit, OnDestroy {
   postsPerPage = 2;
   currentPage = 0;
   pageSizeOptions: number[] = [1, 2, 5, 10];
+  isAuth$: Observable<boolean>;
 
-  constructor(private postService: PostService) {}
+  constructor(private postService: PostService, private authSrv: AuthService) {}
 
   ngOnInit() {
     this.isLoading = true;
@@ -29,6 +31,7 @@ export class PostsListComponent implements OnInit, OnDestroy {
       this.totalPosts = postsData.count;
       this.isLoading = false;
     });
+    this.isAuth$ = this.authSrv.getAuthenticatedStatus();
   }
 
   onDeletePost(id: string) {

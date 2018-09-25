@@ -1,10 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+
+import { AuthService } from './auth/auth.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  title = 'app';
+export class AppComponent implements OnInit {
+  auth$: Observable<boolean>;
+
+  constructor(private authSrv: AuthService) {}
+
+  ngOnInit() {
+    this.auth$ = this.authSrv.getAuthenticatedStatus();
+  }
+
+  onLogout() {
+    this.authSrv.logout();
+  }
 }

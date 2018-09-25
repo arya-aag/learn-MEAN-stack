@@ -10,7 +10,7 @@ export class AuthInterceptor implements HttpInterceptor {
       });
       return next.handle(authReq);
     } else {
-      next.handle(req.clone({ headers: req.headers }));
+      return next.handle(req.clone());
     }
   }
 }
