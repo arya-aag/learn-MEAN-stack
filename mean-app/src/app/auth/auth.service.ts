@@ -24,8 +24,9 @@ export class AuthService {
     const authdata: AuthData = { email, password };
     this.http
       .post<ServerResponse<string>>(`${this.apiUrl}/users/login`, authdata)
-      .subscribe(data => {
-        console.log(data);
+      .subscribe(response => {
+        console.log(response);
+        localStorage.setItem('token', response.payload);
       });
   }
 }
