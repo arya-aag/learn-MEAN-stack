@@ -5,16 +5,21 @@ const jwt = require('jsonwebtoken');
 
 // project imports
 const User = require('../models/user');
-const SECRET_KEY = require('../middleware/check-auth').secret;
+const checkAuth = require('../middleware/check-auth');
 
 // code
 const router = express.Router();
 
-// middleware
+const SECRET_KEY = checkAuth.secret;
+const checker = checkAuth.checker;
 
 // routes
 
 // get
+router.get('/autologin', checker, (req, res, next) => {
+  res.status(200).json({ message: 'auto login success', payload: true });
+});
+
 // post
 router.post('/signup', (req, res, next) => {
   bcrypt.hash(req.body.password, 10).then(hash => {
