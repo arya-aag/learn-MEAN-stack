@@ -12,6 +12,7 @@ import { map, catchError } from 'rxjs/operators';
 export class AuthService {
   private apiUrl = environment.serverUrl;
   private isAuthenticated$ = new BehaviorSubject<boolean>(false);
+  private tokenTimer: any;
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -21,8 +22,17 @@ export class AuthService {
 
   tryLocalAutoLogin(): boolean {
     const authToken = localStorage.getItem('token');
-    this.isAuthenticated$.next(authToken !== null);
-    return authToken !== null;
+    const expireDate = localStorage.getItem('expiration');
+    let isSessionValid = false;
+    if (authToken && expireDate) {
+      const expiresIn = new Date(expireDate).getTime() - new Date().getTime();
+      isSessionValid = expiresIn > 0;
+      if (isSessionValid) {
+        this.resetSessionTimer(expiresIn / 1000);
+      }
+    }
+    this.isAuthenticated$.next(isSessionValid);
+    return isSessionValid;
   }
 
   tryServerAutoLogin(): Observable<boolean> {
@@ -46,19 +56,34 @@ export class AuthService {
   login(email: string, password: string) {
     const authdata: AuthData = { email, password };
     this.http
-      .post<ServerResponse<string>>(`${this.apiUrl}/users/login`, authdata)
+      .post<ServerResponse<{ token: string; expiresIn: number }>>(
+        `${this.apiUrl}/users/login`,
+        authdata
+      )
       .subscribe(response => {
-        localStorage.setItem('token', response.payload);
-        if (response.payload) {
+        localStorage.setItem('token', response.payload.token);
+        if (response.payload.token) {
           this.isAuthenticated$.next(true);
         }
+        const expiresInSeconds = response.payload.expiresIn;
+        const expireDate = new Date(new Date().getTime() + expiresInSeconds * 1000);
+        localStorage.setItem('expiration', expireDate.toISOString());
+        this.resetSessionTimer(expiresInSeconds);
         this.router.navigate(['']);
       });
   }
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('expiration');
     this.isAuthenticated$.next(false);
+    clearTimeout(this.tokenTimer);
     this.router.navigate(['signin']);
+  }
+
+  private resetSessionTimer(expiresInSeconds: number) {
+    this.tokenTimer = setTimeout(() => {
+      this.logout();
+    }, expiresInSeconds * 1000);
   }
 }
