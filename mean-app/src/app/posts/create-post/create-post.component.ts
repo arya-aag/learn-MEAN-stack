@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 
 import { Post } from '../post.model';
 import { PostService } from '../posts.service';
 import { mimeType } from './mime-type.validator';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-post',
@@ -20,7 +21,11 @@ export class CreatePostComponent implements OnInit {
   form: FormGroup;
   imagePreview: string;
 
-  constructor(private postService: PostService, private route: ActivatedRoute) {}
+  constructor(
+    private postService: PostService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -60,24 +65,34 @@ export class CreatePostComponent implements OnInit {
     }
     this.isLoading = true;
     if (this.postId !== null) {
-      this.postService.updatePost(
-        {
-          ...this.post,
-          title: this.form.value.title,
-          content: this.form.value.content
-        },
-        this.form.value.image
-      );
+      this.postService
+        .updatePost(
+          {
+            ...this.post,
+            title: this.form.value.title,
+            content: this.form.value.content
+          },
+          this.form.value.image
+        )
+        .pipe(finalize(() => (this.isLoading = false)))
+        .subscribe(data => {
+          this.router.navigate(['/']);
+        }, console.warn);
     } else {
-      this.postService.addPost(
-        {
-          title: this.form.value.title,
-          content: this.form.value.content,
-          imagePath: null,
-          creator: null
-        },
-        this.form.get('image').value
-      );
+      this.postService
+        .addPost(
+          {
+            title: this.form.value.title,
+            content: this.form.value.content,
+            imagePath: null,
+            creator: null
+          },
+          this.form.get('image').value
+        )
+        .pipe(finalize(() => (this.isLoading = false)))
+        .subscribe(res => {
+          this.router.navigate(['/']);
+        }, console.warn);
     }
 
     this.form.reset();

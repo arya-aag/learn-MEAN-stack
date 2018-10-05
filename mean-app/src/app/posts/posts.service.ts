@@ -54,11 +54,7 @@ export class PostService {
     postData.append('title', post.title);
     postData.append('content', post.content);
     postData.append('image', image, post.title);
-    this.http
-      .post<ServerResponse<Post>>(`${this.apiUrl}/posts`, postData)
-      .subscribe(res => {
-        this.router.navigate(['/']);
-      });
+    return this.http.post<ServerResponse<Post>>(`${this.apiUrl}/posts`, postData);
   }
 
   updatePost(post: Post, image: File) {
@@ -70,11 +66,10 @@ export class PostService {
     } else {
       postData.append('imagePath', image);
     }
-    this.http
-      .put<ServerResponse<any>>(`${this.apiUrl}/posts/${post.id}`, postData)
-      .subscribe(data => {
-        this.router.navigate(['/']);
-      });
+    return this.http.put<ServerResponse<any>>(
+      `${this.apiUrl}/posts/${post.id}`,
+      postData
+    );
   }
 
   deletePost(id: string) {
