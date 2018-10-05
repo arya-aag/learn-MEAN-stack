@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Post } from './post.model';
 import { ServerResponse } from '../common.model';
 import { environment } from '../../environments/environment';
+import { log } from 'util';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,7 @@ export class PostService {
         `${this.apiUrl}/posts${queryParams}`
       )
       .subscribe(data => {
+        console.log(data);
         this.posts = data.payload.posts.map(el => {
           return { ...el, id: el._id };
         });

@@ -49,7 +49,7 @@ export class AuthService {
     this.http
       .post<ServerResponse<any>>(`${this.apiUrl}/users/signup`, authdata)
       .subscribe(data => {
-        this.router.navigate(['']);
+        this.router.navigate(['signin']);
       }, console.log);
   }
 

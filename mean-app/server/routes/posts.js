@@ -93,7 +93,8 @@ router.post(
     const post = new Post({
       title: req.body.title,
       content: req.body.content,
-      imagePath: url + '/images/' + req.file.filename
+      imagePath: url + '/images/' + req.file.filename,
+      creator: req.userData.userId
     });
     post.save().then(
       result => {
@@ -122,15 +123,26 @@ router.put(
       _id: req.params.id,
       title: req.body.title,
       content: req.body.content,
-      imagePath
+      imagePath,
+      creator: req.userData.userId
     });
-    Post.updateOne({ _id: req.params.id }, updatedPost).then(
+    Post.updateOne(
+      { _id: req.params.id, creator: req.userData.userId },
+      updatedPost
+    ).then(
       result => {
         console.log(result);
-        res.status(200).json({
-          message: 'updated',
-          payload: result
-        });
+        if (result.nModified > 0) {
+          res.status(200).json({
+            message: 'updated',
+            payload: result
+          });
+        } else {
+          res.status(401).json({
+            message: 'unauthorized',
+            payload: null
+          });
+        }
       },
       error => {
         console.log(error);
@@ -146,13 +158,20 @@ router.put(
 // delete
 router.delete('/:id', checkAuth, (req, res, next) => {
   console.log('delete post: ' + req.params['id']);
-  Post.deleteOne({ _id: req.params.id }).then(
+  Post.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(
     result => {
       console.log(result);
-      res.status(204).json({
-        message: 'Post deleted!',
-        payload: req.params['id']
-      });
+      if (result.n > 0) {
+        res.status(204).json({
+          message: 'Post deleted!',
+          payload: req.params['id']
+        });
+      } else {
+        res.status(401).json({
+          message: 'unauthorized',
+          payload: null
+        });
+      }
     },
     error => {
       res.status(500).json({
