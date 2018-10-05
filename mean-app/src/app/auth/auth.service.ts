@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { ServerResponse } from '../common.model';
 import { AuthData } from './auth.model';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -50,35 +50,31 @@ export class AuthService {
 
   createUser(email: string, password: string) {
     const authdata: AuthData = { email, password };
-    this.http
-      .post<ServerResponse<any>>(`${this.apiUrl}/users/signup`, authdata)
-      .subscribe(data => {
-        this.router.navigate(['signin']);
-      }, console.log);
+    return this.http.post<ServerResponse<any>>(`${this.apiUrl}/users/signup`, authdata);
   }
 
   login(email: string, password: string) {
     const authdata: AuthData = { email, password };
-    this.http
+    return this.http
       .post<ServerResponse<{ token: string; expiresIn: number; userId: string }>>(
         `${this.apiUrl}/users/login`,
         authdata
       )
-      .subscribe(response => {
-        const expiresInSeconds = response.payload.expiresIn;
-        const expireDate = new Date(new Date().getTime() + expiresInSeconds * 1000);
-        localStorage.setItem('expiration', expireDate.toISOString());
-        this.resetSessionTimer(expiresInSeconds);
+      .pipe(
+        tap(response => {
+          const expiresInSeconds = response.payload.expiresIn;
+          const expireDate = new Date(new Date().getTime() + expiresInSeconds * 1000);
+          localStorage.setItem('expiration', expireDate.toISOString());
+          this.resetSessionTimer(expiresInSeconds);
 
-        localStorage.setItem('token', response.payload.token);
-        if (response.payload.token) {
-          this.isAuthenticated$.next(true);
-        }
+          localStorage.setItem('token', response.payload.token);
+          if (response.payload.token) {
+            this.isAuthenticated$.next(true);
+          }
 
-        localStorage.setItem('userId', response.payload.userId);
-
-        this.router.navigate(['']);
-      });
+          localStorage.setItem('userId', response.payload.userId);
+        })
+      );
   }
 
   logout() {

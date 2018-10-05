@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
+
 import { AuthService } from '../auth.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-signup',
@@ -11,7 +14,7 @@ export class SignupComponent implements OnInit {
   isLoading = false;
   showPassword = false;
 
-  constructor(private authSrv: AuthService) {}
+  constructor(private authSrv: AuthService, private router: Router) {}
 
   ngOnInit() {}
 
@@ -20,6 +23,12 @@ export class SignupComponent implements OnInit {
     if (form.invalid) {
       return;
     }
-    this.authSrv.createUser(form.value.email, form.value.password);
+    this.isLoading = true;
+    this.authSrv
+      .createUser(form.value.email, form.value.password)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe(result => {
+        this.router.navigate(['signin']);
+      }, console.warn);
   }
 }
