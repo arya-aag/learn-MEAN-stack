@@ -1,0 +1,6 @@
+{
+  "env": {
+    "MONGO_DB_URL": "mongodb://max_mean:max123mean@127.0.0.1:27017/max-mean",
+    "JWT_KEY": "this is a long passphrase that's hard to guess"
+  }
+}

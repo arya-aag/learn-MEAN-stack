@@ -1,19 +1,16 @@
-// library imports
 const express = require('express');
 const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
 
-// project imports
 const postsRoutes = require('./routes/posts/post.routes');
 const userRoutes = require('./routes/users/user.routes');
 
-// code
 const app = express();
 
 mongoose
   .connect(
-    'mongodb://max_mean:max123mean@127.0.0.1:27017/max-mean',
+    process.env.MONGO_DB_URL,
     { useNewUrlParser: true }
   )
   .then(

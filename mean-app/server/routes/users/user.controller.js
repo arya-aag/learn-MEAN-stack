@@ -1,13 +1,8 @@
-// library imports
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-// project imports
 const User = require('./user.model');
-const checkAuth = require('../../middleware/check-auth');
-const SECRET_KEY = checkAuth.secret;
 
-// code
 exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10).then(hash => {
     const user = new User({
@@ -56,7 +51,7 @@ exports.loginUser = (req, res, next) => {
           email: fetchedUser.email,
           userId: fetchedUser._id
         },
-        SECRET_KEY,
+        process.env.JWT_KEY,
         { expiresIn: '1h' }
       );
       res.status(200).json({

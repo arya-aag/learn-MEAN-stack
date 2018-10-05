@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 import { Post } from './post.model';
 import { ServerResponse } from '../common.model';
 import { environment } from '../../environments/environment';
-import { log } from 'util';
 
 @Injectable({
   providedIn: 'root'
