@@ -5,8 +5,8 @@ const mongoose = require('mongoose');
 const path = require('path');
 
 // project imports
-const postsRoutes = require('./routes/posts');
-const userRoutes = require('./routes/users');
+const postsRoutes = require('./routes/posts/post.routes');
+const userRoutes = require('./routes/users/user.routes');
 
 // code
 const app = express();
@@ -52,7 +52,7 @@ app.use((req, res, next) => {
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: false }));
 
-app.use('/images', express.static(path.join('server/images')));
+app.use('/images', express.static(path.join('server/assets/images')));
 
 // routing logic
 app.use('/api/posts', postsRoutes);

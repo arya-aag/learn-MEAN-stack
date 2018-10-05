@@ -3,8 +3,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 // project imports
-const User = require('../models/user');
-const checkAuth = require('../middleware/check-auth');
+const User = require('./user.model');
+const checkAuth = require('../../middleware/check-auth');
 const SECRET_KEY = checkAuth.secret;
 
 // code

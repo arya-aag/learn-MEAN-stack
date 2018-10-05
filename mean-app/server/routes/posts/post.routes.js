@@ -2,9 +2,9 @@
 const express = require('express');
 
 // project imports
-const postsController = require('../controllers/post');
-const checkAuth = require('../middleware/check-auth').checker;
-const extractFile = require('../middleware/file');
+const postsController = require('./post.controller');
+const checkAuth = require('../../middleware/check-auth').checker;
+const extractFile = require('../../middleware/file');
 
 // routes
 const router = express.Router();

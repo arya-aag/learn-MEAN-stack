@@ -1,5 +1,5 @@
 // project imports
-const Post = require('../models/post');
+const Post = require('./post.model');
 
 exports.getPost = (req, res, next) => {
   Post.findById({ _id: req.params.id }).then(
