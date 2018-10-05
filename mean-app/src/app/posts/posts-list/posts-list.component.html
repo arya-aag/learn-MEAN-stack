@@ -11,7 +11,7 @@
       class="img-wrapper"><img [src]="post.imagePath"
         alt="post.title"></div>
     <p>{{post.content}}</p>
-    <mat-action-row *ngIf="isAuth$ | async">
+    <mat-action-row *ngIf="(isAuth$ | async) && post.creator === userId">
       <button mat-button
         color="warn"
         (click)="onDeletePost(post.id)">Delete</button>

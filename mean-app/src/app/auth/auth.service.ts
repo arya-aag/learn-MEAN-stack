@@ -20,6 +20,10 @@ export class AuthService {
     return this.isAuthenticated$.asObservable();
   }
 
+  getUserId(): string {
+    return localStorage.getItem('userId');
+  }
+
   tryLocalAutoLogin(): boolean {
     const authToken = localStorage.getItem('token');
     const expireDate = localStorage.getItem('expiration');
@@ -56,19 +60,23 @@ export class AuthService {
   login(email: string, password: string) {
     const authdata: AuthData = { email, password };
     this.http
-      .post<ServerResponse<{ token: string; expiresIn: number }>>(
+      .post<ServerResponse<{ token: string; expiresIn: number; userId: string }>>(
         `${this.apiUrl}/users/login`,
         authdata
       )
       .subscribe(response => {
-        localStorage.setItem('token', response.payload.token);
-        if (response.payload.token) {
-          this.isAuthenticated$.next(true);
-        }
         const expiresInSeconds = response.payload.expiresIn;
         const expireDate = new Date(new Date().getTime() + expiresInSeconds * 1000);
         localStorage.setItem('expiration', expireDate.toISOString());
         this.resetSessionTimer(expiresInSeconds);
+
+        localStorage.setItem('token', response.payload.token);
+        if (response.payload.token) {
+          this.isAuthenticated$.next(true);
+        }
+
+        localStorage.setItem('userId', response.payload.userId);
+
         this.router.navigate(['']);
       });
   }
@@ -76,6 +84,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('expiration');
+    localStorage.removeItem('userId');
     this.isAuthenticated$.next(false);
     clearTimeout(this.tokenTimer);
     this.router.navigate(['signin']);

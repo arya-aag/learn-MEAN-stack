@@ -20,11 +20,13 @@ export class PostsListComponent implements OnInit, OnDestroy {
   currentPage = 0;
   pageSizeOptions: number[] = [1, 2, 5, 10];
   isAuth$: Observable<boolean>;
+  userId: string;
 
   constructor(private postService: PostService, private authSrv: AuthService) {}
 
   ngOnInit() {
     this.isLoading = true;
+    this.userId = this.authSrv.getUserId(); // this should be made 'null' on logout
     this.postService.getPosts(this.postsPerPage, 0);
     this.postsSub = this.postService.getPostsAsObs().subscribe(postsData => {
       this.posts = postsData.posts;
