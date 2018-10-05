@@ -23,7 +23,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           errMsg = err.error.message;
         }
         this.dialog.open(ErrorComponent, {
-          width: '250px',
+          width: '480px',
           data: { message: errMsg }
         });
 

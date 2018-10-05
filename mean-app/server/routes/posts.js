@@ -43,19 +43,19 @@ router.get('/:id', (req, res, next) => {
     post => {
       if (post) {
         res.status(200).json({
-          message: 'found',
+          message: 'Found!',
           payload: post
         });
       } else {
         res.status(404).json({
-          message: 'not-found',
+          message: 'Post not found!',
           payload: null
         });
       }
     },
     error => {
       res.status(500).json({
-        message: 'failure',
+        message: 'Error occurred while getting the post!',
         payload: error
       });
     }
@@ -80,6 +80,12 @@ router.get('', (req, res, next) => {
         message: 'success',
         payload: { count, posts: postsArr }
       });
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: 'Error occurred while deleting the post!',
+        payload: error
+      });
     });
 });
 
@@ -102,7 +108,10 @@ router.post(
         res.status(201).json({ message: 'created', payload: result });
       },
       error => {
-        res.status(500).json({ message: 'failed', payload: error });
+        res.status(500).json({
+          message: 'Error occurred while creating the post! Please retry.',
+          payload: error
+        });
       }
     );
   }
@@ -134,12 +143,12 @@ router.put(
         console.log(result);
         if (result.nModified > 0) {
           res.status(200).json({
-            message: 'updated',
+            message: 'Updated post!',
             payload: result
           });
         } else {
           res.status(401).json({
-            message: 'unauthorized',
+            message: 'You cannot edit this post!',
             payload: null
           });
         }
@@ -147,7 +156,7 @@ router.put(
       error => {
         console.log(error);
         res.status(500).json({
-          message: 'failed',
+          message: 'Error occurred while updating the post!',
           payload: error
         });
       }
@@ -168,14 +177,14 @@ router.delete('/:id', checkAuth, (req, res, next) => {
         });
       } else {
         res.status(401).json({
-          message: 'unauthorized',
+          message: 'You cannot delete this post!',
           payload: null
         });
       }
     },
     error => {
       res.status(500).json({
-        message: 'failure',
+        message: 'Error occurred while deleting the post!',
         payload: error
       });
     }
