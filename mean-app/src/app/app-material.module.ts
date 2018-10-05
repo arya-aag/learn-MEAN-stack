@@ -14,17 +14,6 @@ import {
 
 @NgModule({
   declarations: [],
-  imports: [
-    MatToolbarModule,
-    MatInputModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatExpansionModule,
-    MatProgressSpinnerModule,
-    MatPaginatorModule,
-    MatDialogModule
-  ],
   providers: [],
   exports: [
     MatToolbarModule,

@@ -28,7 +28,7 @@ export class SignupComponent implements OnInit {
       .createUser(form.value.email, form.value.password)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe(result => {
-        this.router.navigate(['signin']);
+        this.router.navigate(['auth', 'signin']);
       }, console.warn);
   }
 }

@@ -83,7 +83,7 @@ export class AuthService {
     localStorage.removeItem('userId');
     this.isAuthenticated$.next(false);
     clearTimeout(this.tokenTimer);
-    this.router.navigate(['signin']);
+    this.router.navigate(['auth', 'signin']);
   }
 
   private resetSessionTimer(expiresInSeconds: number) {

@@ -5,11 +5,11 @@
     <div class="button-row">
       <a *ngIf="!(auth$ | async)"
         mat-button
-        routerLink="/signup"
+        routerLink="/auth/signup"
         routerLinkActive="mat-accent">Sign up</a>
       <a *ngIf="!(auth$ | async)"
         mat-button
-        routerLink="/signin"
+        routerLink="/auth/signin"
         routerLinkActive="mat-accent">Sign in</a>
       <a *ngIf="auth$ | async"
         mat-button
