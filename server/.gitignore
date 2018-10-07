@@ -1,0 +1,6 @@
+# custom
+/app/assets/images/*.png
+/app/assets/images/*.jpg
+
+# dependencies
+/node_modules

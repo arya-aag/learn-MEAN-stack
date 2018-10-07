@@ -3,8 +3,8 @@ const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
 
-const postsRoutes = require('./routes/posts/post.routes');
-const userRoutes = require('./routes/users/user.routes');
+const postsRoutes = require('./app/routes/posts/post.routes');
+const userRoutes = require('./app/routes/users/user.routes');
 
 const app = express();
 
@@ -49,7 +49,7 @@ app.use((req, res, next) => {
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: false }));
 
-app.use('/images', express.static(path.join('server/assets/images')));
+app.use('/images', express.static(path.join('app/assets/images')));
 
 // routing logic
 app.use('/api/posts', postsRoutes);
