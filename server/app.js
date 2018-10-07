@@ -49,10 +49,14 @@ app.use((req, res, next) => {
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: false }));
 
-app.use('/images', express.static(path.join('app/assets/images')));
+app.use('/images', express.static(path.join(__dirname, 'app/assets/images')));
+app.use('/', express.static(path.join(__dirname, 'ui')));
 
 // routing logic
 app.use('/api/posts', postsRoutes);
 app.use('/api/users', userRoutes);
+app.use((req, res, next) => {
+  res.sendFile(path.join(__dirname, 'ui', 'index.html'));
+});
 
 module.exports = app;

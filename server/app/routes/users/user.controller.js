@@ -30,7 +30,7 @@ exports.loginUser = (req, res, next) => {
   let fetchedUser;
   User.findOne({ email: req.body.email })
     .then(user => {
-      if (!user) {
+      if (user === null && user === undefined) {
         return res.status(401).json({
           message: 'Invalid Credentials: Check email.',
           payload: null
@@ -46,6 +46,7 @@ exports.loginUser = (req, res, next) => {
           payload: null
         });
       }
+
       const token = jwt.sign(
         {
           email: fetchedUser.email,
